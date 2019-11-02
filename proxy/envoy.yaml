@@ -1,0 +1,46 @@
+static_resources:
+  listeners:
+    - name: rest_listener
+      address:
+        socket_address: { address: 0.0.0.0, port_value: 8081 }
+      filter_chains:
+        - filters:
+            - name: envoy.http_connection_manager
+              config:
+                stat_prefix: grpc_json
+                codec_type: auto
+                access_log:
+                  - name: envoy.file_access_log
+                    config:
+                      path: /dev/stdout
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - name: local_service
+                      domains: ["*"]
+                      routes:
+                        - match: { prefix: "/" }
+                          route:
+                            cluster: midori_app
+                            max_grpc_timeout: 0s
+                http_filters:
+                  - name: envoy.grpc_json_transcoder
+                    config:
+                      proto_descriptor: "/etc/envoy/descriptor_set.desc"
+                      services:
+                        - "com.okue.demo.midori.grpc.service.Greeting"
+                        - "com.okue.demo.midori.grpc.service.Booking"
+                      print_options:
+                        add_whitespace: true
+                        always_print_primitive_fields: true
+                        always_print_enums_as_ints: false
+                        preserve_proto_field_names: false
+                  - name: envoy.router
+  clusters:
+    - name: midori_app
+      connect_timeout: 0.25s
+      type: logical_dns
+      http2_protocol_options: {}
+      lb_policy: round_robin
+      hosts:
+        - { socket_address: { address: host.docker.internal, port_value: 6565}}
