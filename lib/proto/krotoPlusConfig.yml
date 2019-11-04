@@ -1,0 +1,7 @@
+protoBuilders:
+  - {unwrapBuilders: true, useDslMarkers: true}
+
+grpcCoroutines: [{}]
+
+grpcStubExts:
+  - supportCoroutines: true

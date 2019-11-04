@@ -28,8 +28,8 @@ static_resources:
                     config:
                       proto_descriptor: "/etc/envoy/descriptor_set.desc"
                       services:
-                        - "com.okue.demo.midori.grpc.service.Greeting"
-                        - "com.okue.demo.midori.grpc.service.Booking"
+                        - "com.okue.midori.grpc.service.Greeting"
+                        - "com.okue.midori.grpc.service.Booking"
                       print_options:
                         add_whitespace: true
                         always_print_primitive_fields: true
@@ -39,8 +39,9 @@ static_resources:
   clusters:
     - name: midori_app
       connect_timeout: 0.25s
-      type: logical_dns
+      type: STRICT_DNS
       http2_protocol_options: {}
       lb_policy: round_robin
       hosts:
         - { socket_address: { address: host.docker.internal, port_value: 6565}}
+        - { socket_address: { address: host.docker.internal, port_value: 6566}}

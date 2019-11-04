@@ -1,110 +1,65 @@
-import com.google.protobuf.gradle.generateProtoTasks
-import com.google.protobuf.gradle.ofSourceSet
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
-import com.google.protobuf.gradle.id
-import com.google.protobuf.gradle.plugins
-import groovy.lang.GString
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.2.0.RELEASE"
+    id("io.gitlab.arturbosch.detekt") version "1.1.1"
     id("io.spring.dependency-management") version "1.0.8.RELEASE"
+    id("org.jlleitschuh.gradle.ktlint") version "9.1.0"
+    id("org.springframework.boot") version "2.2.1.RELEASE"
+    java
+    idea
     kotlin("jvm") version "1.3.50"
     kotlin("plugin.spring") version "1.3.50"
-    id("java")
-    id("com.google.protobuf") version "0.8.10"
-    idea
 }
 
-group = "com.okue.demo"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+allprojects {
+    group = "com.okue.midori"
+    version = "0.0.1-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    // spring
-    implementation("io.github.lognet:grpc-spring-boot-starter:3.4.3")
-
-    // kotlin
-    implementation(kotlin("reflect"))
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-
-    // logger
-    implementation("io.github.microutils:kotlin-logging:1.7.6")
-
-    // test
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    apply {
+        plugin("io.gitlab.arturbosch.detekt")
+        plugin("io.spring.dependency-management")
+        plugin("org.jlleitschuh.gradle.ktlint")
     }
-}
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "1.8"
-    }
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.10.0"
-    }
-    plugins {
-        id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.24.0"
+    ktlint {
+        android.set(true)
+        verbose.set(true)
+        disabledRules.set(setOf("import-ordering"))
+        filter {
+            exclude { element -> element.file.path.contains("generated-java") }
         }
     }
-    generateProtoTasks {
-        ofSourceSet("main").forEach { task ->
-            // https//github.com/google/protobuf-gradle-plugin#generate-descriptor-set-files
-            task.generateDescriptorSet = true
-            task.descriptorSetOptions.includeSourceInfo = true
-            task.descriptorSetOptions.includeImports = true
-            task.plugins {
-                id("grpc")
+
+    detekt {
+        reports.xml.enabled = false
+        parallel = true
+        ignoreFailures = true
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        dependencies {
+            dependencySet("com.github.marcoferrer.krotoplus:0.5.0") {
+                entry("kroto-plus-coroutines")
+                entry("kroto-plus-message")
             }
+            dependency("io.github.lognet:grpc-spring-boot-starter:3.4.3")
+            dependency("io.github.microutils:kotlin-logging:1.7.6")
+            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.3.2")
         }
     }
-}
 
-tasks.register<Copy>("copyGrpcDescriptor") {
-    description = "copy grpc description to ../proxy directory"
-    group = "proto"
-    dependsOn("generateProto")
-    from("build/generated/source/proto/main/descriptor_set.desc")
-    into("./proxy/")
-}
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "12"
+        }
+    }
 
-tasks.register<Delete>("cleanUpProto") {
-    group = "proto"
-    delete(protobuf.protobuf.generatedFilesBaseDir)
-}
-
-tasks.register("mySetupProto") {
-    group = "proto"
-    description = "generate proto files and copy a descriptor set to ./proxy dir"
-    dependsOn("cleanUpProto", "generateProto", "copyGrpcDescriptor")
-}
-
-idea.module {
-    sourceDirs.add(file("${protobuf.protobuf.generatedFilesBaseDir}/main/java"))
-    sourceDirs.add(file("${protobuf.protobuf.generatedFilesBaseDir}/main/grpc"))
-}
-
-sourceSets {
-    main {
-        java.srcDirs(
-            "build/generated/source/proto/main/java",
-            "build/generated/source/proto/main/grpc"
-        )
+    tasks.withType<Test> {
+        useJUnitPlatform()
     }
 }

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+import "com/okue/midori/grpc/common/result.proto";
+
+package com.okue.midori.grpc.service;
+option java_package = "com.okue.midori.grpc.service";
+option java_multiple_files = true;
+
+service BookingInternal {
+    rpc bookingList (BookingListRequest) returns (BookingListResponse) {
+    }
+}
+
+message BookingListRequest {
+    string id = 1;
+}
+
+message BookingListResponse {
+    repeated string name = 1;
+    com.okue.midori.grpc.common.Result result = 2;
+}

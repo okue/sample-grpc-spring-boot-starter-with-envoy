@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.okue.midori.grpc.common;
+option java_package = "com.okue.midori.grpc.common";
+option java_multiple_files = true;
+
+message Result {
+    enum Status {
+        Ok = 0;
+        Err = 1;
+    };
+    Status status = 1;
+    string reason = 2;
+}

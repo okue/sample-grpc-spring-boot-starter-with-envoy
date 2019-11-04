@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MidoriApplication_2" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" singleton="false">
+    <module name="com.okue.midori.midori.app.api.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.okue.midori.api.MidoriApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="grpc.port" />
+        <option name="value" value="6566" />
+      </param>
+      <param>
+        <option name="name" value="logging.level.root" />
+        <option name="value" value="debug" />
+      </param>
+    </additionalParameters>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

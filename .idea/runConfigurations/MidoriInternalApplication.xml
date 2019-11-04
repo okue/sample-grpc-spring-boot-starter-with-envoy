@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MidoriInternalApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" singleton="false">
+    <module name="com.okue.midori.midori.app.internal-api.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.okue.midori.internal.api.MidoriInternalApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <additionalParameters>
+      <param>
+        <option name="name" value="logging.level.root" />
+        <option name="value" value="debug" />
+      </param>
+    </additionalParameters>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

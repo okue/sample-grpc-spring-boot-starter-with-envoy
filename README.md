@@ -3,7 +3,9 @@
 ## Build
 
 ```
-$ ./gradlew :mySetUpProto :bootRun
+$ ./gradlew mySetUpProto
+$ ./gradlew :app:api:bootRun
+$ ./gradlew :app:internal-api:bootRun
 
 $ docker build -t envoy/json-transcoder:latest .
 $ docker run -it --rm -p 8081:8081 envoy/json-transcoder
