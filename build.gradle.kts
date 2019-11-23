@@ -11,6 +11,10 @@ plugins {
     kotlin("plugin.spring") version "1.3.50"
 }
 
+apply {
+    from("${rootDir.absolutePath}/gradle/reportDependencyUpdate.gradle.kts")
+}
+
 allprojects {
     group = "com.okue.midori"
     version = "0.0.1-SNAPSHOT"
@@ -19,6 +23,7 @@ allprojects {
         plugin("io.gitlab.arturbosch.detekt")
         plugin("io.spring.dependency-management")
         plugin("org.jlleitschuh.gradle.ktlint")
+        plugin("java")
     }
 
     ktlint {
