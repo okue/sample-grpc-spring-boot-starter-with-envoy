@@ -1,6 +1,5 @@
 package com.okue.midori.rest.api
 
-
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 

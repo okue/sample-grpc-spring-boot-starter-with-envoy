@@ -6,7 +6,6 @@ import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
 
 plugins {
-    id("org.springframework.boot")
     id("com.google.protobuf") version "0.8.10"
     idea
     java
@@ -15,8 +14,8 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_12
-    targetCompatibility = JavaVersion.VERSION_12
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
@@ -93,6 +92,3 @@ sourceSets {
         )
     }
 }
-
-val jar: Jar by tasks
-jar.enabled = true
