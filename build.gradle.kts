@@ -12,10 +12,6 @@ plugins {
     kotlin("plugin.spring") version "1.3.60"
 }
 
-apply {
-    from("${rootDir.absolutePath}/gradle/reportDependencyUpdate.gradle.kts")
-}
-
 allprojects {
     group = "com.okue.midori"
     version = "0.0.1-SNAPSHOT"
